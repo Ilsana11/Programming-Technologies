@@ -1,4 +1,5 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bank;
 
@@ -59,4 +60,20 @@ internal class BankAccount
         _allTransactions.Add(wirhdrawal);
 
     }
+
+    public string GetAccountHistory()
+    {
+        var report = new StringBuilder();
+
+        decimal balance = 0;
+        report.AppendLine("Data\t\tAmount\tBalance\tNote");
+        foreach(var item in _allTransactions)
+        {
+            balance += item.Amount;
+            report.AppendLine($"" + $"{item.Date.ToShortDateString()}\t" + $"{item.Amount}\t{balance}\t{item.Note}");
+        }
+        return report.ToString();
+    }
+
+
 }
