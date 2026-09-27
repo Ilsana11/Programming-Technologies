@@ -12,7 +12,7 @@
         /// </summary>
         public int Area { get; set; } 
         
-        public bool IsBig { get { return Area > 200; } }
+        public bool IsBig { get {return Area > 200; } }
         
         /// <summary>
         /// Возвращает строковое представление секции 
