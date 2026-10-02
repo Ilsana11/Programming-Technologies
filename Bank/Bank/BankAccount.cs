@@ -3,8 +3,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bank;
 
-internal class BankAccount
+// BankAccount потомок класса object 
+public class BankAccount
 {
+    private readonly decimal _minimumBalance;
     private List<Transaction> _allTransactions = new List<Transaction>();
     public string Owner { get; private set; }
     public string Number { get; }
@@ -24,16 +26,27 @@ internal class BankAccount
     }
 
     private static int s_accountNumberSeed = 1000000000;
-    public BankAccount(string name, decimal initialBalance)
+    public BankAccount(string name, decimal initialBalance): this(name, initialBalance, 0) 
     {
 
+        
+    }
+
+    public BankAccount(string name, decimal initialBalance, decimal minimumBalance)
+    {
         //Balance = initialBalance; //this.Balance = initialBalance;
-        MakeDeposite(initialBalance, DateTime.UtcNow, " initial balance");
+        
         Owner = name;
         Number = s_accountNumberSeed.ToString();
         s_accountNumberSeed++;
-    }
 
+        _minimumBalance = minimumBalance;
+        if(initialBalance > 0)
+        {
+            MakeDeposite(initialBalance, DateTime.UtcNow, " initial balance");
+        }
+        
+    }
     public void MakeDeposite(decimal amout, DateTime date, string note)
     {
         if (amout <= 0)
@@ -45,20 +58,49 @@ internal class BankAccount
         _allTransactions.Add(deposite);
     }
 
-    public void MakeWithdrawal(decimal amout, DateTime date, string note)
+    public void MakeWithdrawal(decimal amount, DateTime date, string note)
     {
-        if (amout <= 0)
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
+
+        Transaction? overdraftTransaction = CheckWithdrawalLimit(Balance - amount < _minimumBalance);
+        Transaction? withdrawal = new(-amount, date, note);
+
+        _allTransactions.Add(withdrawal);
+
+        if(overdraftTransaction is not null)
         {
-            throw new ArgumentOutOfRangeException(nameof(amout), "Amount must be positive");
-        }
-        if (Balance < amout)
-        {
-            throw new InvalidOperationException("Not sufficient money for this wirhdrawal");
+            _allTransactions.Add(overdraftTransaction);
         }
 
-        var wirhdrawal = new Transaction(-amout, date, note);
-        _allTransactions.Add(wirhdrawal);
 
+        //if (amount <= 0)
+        //{
+        //    throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be positive");
+        //}
+        //if (Balance - amount < _minimumBalance)
+        //{
+        //    throw new InvalidOperationException("Not sufficient money for this wirhdrawal");
+        //}
+
+        //var wirhdrawal = new Transaction(-amount, date, note);
+        //_allTransactions.Add(wirhdrawal);
+
+    }
+    // protected - модификатор доступа, который означает,
+    // что это метод можно вызвать только из текущего дочернего класса
+    // клиент (внешний код) данный метод вызвать мне может)
+    protected virtual Transaction? CheckWithdrawalLimit(bool isOverdrawn)
+    {
+        if(isOverdrawn)
+        {
+            throw new InvalidOperationException("Not sufficient rubls for this withdrawal");
+        }
+        else
+        {
+            // default содержит значение по умолчанию, так как тип возвращаемого значения - ссылочный, то 
+            // default = null
+            return default; // return null;
+        }
     }
 
     public string GetAccountHistory()
@@ -75,5 +117,17 @@ internal class BankAccount
         return report.ToString();
     }
 
+    // Ключевое слово virtual позволяет в дочернем классе предоставить
+    // другую реализацию этого метода PerformMonthAndTransactions
+    public virtual void PerformMonthAndTransactions()
+    {
 
+    }
+
+    // Переорпеделяем метод базового класса - класса object 
+    // ToString - возвращает строку с информацией об объекте 
+    public override string ToString()
+    {
+        return $"Owner: {Owner}\t account number: {Number}\t (тип счета {GetType()})";
+    }
 }

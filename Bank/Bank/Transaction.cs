@@ -5,6 +5,6 @@
 /// <param name="Amount">сумма транзакции</param>
 /// <param name="Date">дата транзакции</param>
 /// <param name="Note">заметки транзакции</param>
-internal record Transaction(decimal Amount, DateTime Date, string Note);
+public record Transaction(decimal Amount, DateTime Date, string Note);
 
  
