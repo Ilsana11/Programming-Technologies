@@ -2,14 +2,32 @@
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bank;
-
+/// <summary>
+/// Класс: Представляет банковский счёт клиента
+/// Хранит историю транзакций и вычисляет баланс на её основе
+/// </summary>
 // BankAccount потомок класса object 
 public class BankAccount
 {
+    /// <summary>
+    /// Поле: Минимальный остаток
+    /// </summary>
     private readonly decimal _minimumBalance;
+    /// <summary>
+    /// Поле: Список всех транзакций
+    /// </summary>
     private List<Transaction> _allTransactions = new List<Transaction>();
+    /// <summary>
+    /// Свойство: Владелец счета
+    /// </summary>
     public string Owner { get; private set; }
+    /// <summary>
+    /// Свойство: Номер счета
+    /// </summary>
     public string Number { get; }
+    /// <summary>
+    /// Свойство: Текущий баланс счёта, вычисляемый как сумма всех транзакций
+    /// </summary>
     public decimal Balance 
     {
         get
@@ -25,13 +43,27 @@ public class BankAccount
         }
     }
 
+    /// <summary>
+    /// Поле: Счётчик для генерации уникальных номеров счетов
+    /// </summary>
     private static int s_accountNumberSeed = 1000000000;
+    /// <summary>
+    /// Конструктор: Создаёт банковский счёт с минимальным остатком по умолчанию 0
+    /// </summary>
+    /// <param name="name">Имя владельца счёта</param>
+    /// <param name="initialBalance">Начальный баланс счёта</param>
     public BankAccount(string name, decimal initialBalance): this(name, initialBalance, 0) 
     {
 
         
     }
 
+    /// <summary>
+    /// Конструктор: Создаёт банковский счёт с заданным минимальным остатком
+    /// </summary>
+    /// <param name="name">Имя владельца счёта</param>
+    /// <param name="initialBalance">начальный баланс</param>
+    /// <param name="minimumBalance">Минимально допустимый остаток</param>
     public BankAccount(string name, decimal initialBalance, decimal minimumBalance)
     {
         //Balance = initialBalance; //this.Balance = initialBalance;
@@ -47,6 +79,16 @@ public class BankAccount
         }
         
     }
+
+    /// <summary>
+    /// Метод: пополняет счёт на указанную сумму
+    /// </summary>
+    /// <param name="amout">Сумма пополнения. Должна быть положительной</param>
+    /// <param name="date">Дата операции</param>
+    /// <param name="note">Комментарий к операции</param>
+    /// <exception cref="ArgumentOutOfRangeException"> 
+    /// Бросается, если <paramref name="amout"/> меньше или равен нулю
+    /// </exception>
     public void MakeDeposite(decimal amout, DateTime date, string note)
     {
         if (amout <= 0)
@@ -58,6 +100,18 @@ public class BankAccount
         _allTransactions.Add(deposite);
     }
 
+    /// <summary>
+    /// Метод: снимает указанную сумму со счёта
+    /// </summary>
+    /// <param name="amount">Сумма снятия. Должна быть положительной</param>
+    /// <param name="date">Дата операции</param>
+    /// <param name="note">Комментарий к операции</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Бросается, если <paramref name="amount"/> меньше или равен нулю.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Бросается, если после снятия баланс опустится ниже минимального остатка.
+    /// </exception>
     public void MakeWithdrawal(decimal amount, DateTime date, string note)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
@@ -89,6 +143,17 @@ public class BankAccount
     // protected - модификатор доступа, который означает,
     // что это метод можно вызвать только из текущего дочернего класса
     // клиент (внешний код) данный метод вызвать мне может)
+
+    /// <summary>
+    /// Метод (protected, virtual): проверяет, допустимо ли снятие с учётом минимального остатка
+    /// </summary>
+    /// <param name="isOverdrawn">Признак того, что баланс выйдет за минимальный остаток</param>
+    /// <returns>
+    /// Транзакцию за превышение лимита либо <c>null</c>, если превышения нет
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// Бросается, если <paramref name="isOverdrawn"/> равно <c>true</c>
+    /// </exception>
     protected virtual Transaction? CheckWithdrawalLimit(bool isOverdrawn)
     {
         if(isOverdrawn)
@@ -103,6 +168,12 @@ public class BankAccount
         }
     }
 
+    /// <summary>
+    ///  Метод: формирует отчёт по всем транзакциям счёта
+    /// </summary>
+    /// <returns>
+    /// Строка с историей операций: дата, сумма, баланс и комментарий
+    /// </returns>
     public string GetAccountHistory()
     {
         var report = new StringBuilder();
@@ -117,6 +188,10 @@ public class BankAccount
         return report.ToString();
     }
 
+    /// <summary>
+    /// Метод (virtual): выполняет операции, начисляемые в конце месяца
+    /// Базовая реализация ничего не делает
+    /// </summary>
     // Ключевое слово virtual позволяет в дочернем классе предоставить
     // другую реализацию этого метода PerformMonthAndTransactions
     public virtual void PerformMonthAndTransactions()
@@ -124,10 +199,22 @@ public class BankAccount
 
     }
 
+    /// <summary>
+    /// Метод (override): возвращает строковое представление счёта 
+    /// </summary>
+    /// <returns>Строка с владельцем, номером счёта и типом счёта</returns>
     // Переорпеделяем метод базового класса - класса object 
     // ToString - возвращает строку с информацией об объекте 
     public override string ToString()
     {
         return $"Owner: {Owner}\t account number: {Number}\t (тип счета {GetType()})";
     }
+
+
+
+
+
+
+
+
 }
