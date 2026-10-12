@@ -71,7 +71,15 @@
             Console.WriteLine(regular.GetAccountHistory());
             Console.WriteLine(premium.GetAccountHistory());
             Console.WriteLine(vip.GetAccountHistory());
-             
+
+
+            // Задача 2
+            Console.WriteLine("Задача 2");
+            Console.WriteLine("AuditLog");
+            Console.WriteLine(BankAccount.Audit.GetReport());
+
+
+
         }
     }
 }

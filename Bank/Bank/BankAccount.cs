@@ -7,19 +7,12 @@ namespace Bank;
 /// </summary>
 public enum AccountStatus
 {
-    /// <summary>
-    /// Обычный клиент: комиссия 50 руб/мес
-    /// </summary>
     Regular,
-    /// <summary>
-    /// Премиум: 0 комиссии, 1% на остаток свыше 10 000
-    /// </summary>
     Premium,
-    /// <summary>
-    /// VIP: 0 комиссии, 3% на остаток свыше 10 000, 5% кэшбэк на списания
-    /// </summary>
     VIP
 }
+
+
 /// <summary>
 /// Класс: Представляет банковский счёт клиента
 /// Хранит историю транзакций и вычисляет баланс на её основе
@@ -65,8 +58,7 @@ public class BankAccount
     /// </summary>
     public AccountStatus Status { get; set; }
 
-
-
+    public static AuditLog Audit { get; } = new AuditLog();
     /// <summary>
     /// Поле: Счётчик для генерации уникальных номеров счетов
     /// </summary>
@@ -76,12 +68,14 @@ public class BankAccount
     /// </summary>
     /// <param name="name">Имя владельца счёта</param>
     /// <param name="initialBalance">Начальный баланс счёта</param>
-    public BankAccount(string name, decimal initialBalance): this(name, initialBalance, 0) 
+    public BankAccount(string name, decimal initialBalance)
+        : this(name, initialBalance, 0) 
     {
-
-        
     }
 
+    public BankAccount(string name, decimal initialBalance,
+                   AccountStatus status = AccountStatus.Regular)
+    : this(name, initialBalance, 0, status) { }
     /// <summary>
     /// Конструктор: Создаёт банковский счёт с заданным минимальным остатком
     /// </summary>
@@ -89,10 +83,10 @@ public class BankAccount
     /// <param name="initialBalance">начальный баланс</param>
     /// <param name="minimumBalance">Минимально допустимый остаток</param>
     public BankAccount(string name, decimal initialBalance, decimal minimumBalance,
-        AccountStatus status = AccountStatus.Regular)
+       AccountStatus status = AccountStatus.Regular)
     {
         //Balance = initialBalance; //this.Balance = initialBalance;
-        
+
         Owner = name;
         Number = s_accountNumberSeed.ToString();
         s_accountNumberSeed++;
@@ -120,12 +114,16 @@ public class BankAccount
     {
         if (amout <= 0)
         {
-            throw new ArgumentOutOfRangeException (nameof(amout),"Amount must be positive");
+            throw new ArgumentOutOfRangeException(nameof(amout), "Amount must be positive");
         }
 
         var deposite = new Transaction(amout, date, note);
         _allTransactions.Add(deposite);
+
+        Audit.Log(Number, "Deposit", amout, date);
     }
+
+        
 
     /// <summary>
     /// Метод: снимает указанную сумму со счёта
@@ -146,23 +144,25 @@ public class BankAccount
         Transaction? overdraftTransaction = CheckWithdrawalLimit(Balance - amount < _minimumBalance);
         Transaction? withdrawal = new(-amount, date, note);
 
-        _allTransactions.Add(withdrawal);
 
-        if(overdraftTransaction is not null)
-        {
-            _allTransactions.Add(overdraftTransaction);
-        }
+        _allTransactions.Add(withdrawal);
+        Audit.Log(Number, "Withdrawal", -amount, date);
 
         // Кэшбек VIP - 5% на все списания
         if (Status == AccountStatus.VIP)
         {
-            _allTransactions.Add(new Transaction(amount * 0.05m, date, "VIP cashback"));
+            decimal cashback = amount * 0.05m;
+            _allTransactions.Add(new Transaction(cashback, date, "VIP cashback"));
+            Audit.Log(Number, "Interest", cashback, date); 
         }
         if(overdraftTransaction is not null)
         {
             _allTransactions.Add(overdraftTransaction);
+            Audit.Log(Number, "Withdrawal", overdraftTransaction.Amount, date);
         }
 
+
+        
 
         //if (amount <= 0)
         //{
