@@ -100,7 +100,6 @@ public class BankAccount
         
     }
 
-
     /// <summary>
     /// Метод: пополняет счёт на указанную сумму
     /// </summary>
@@ -154,7 +153,7 @@ public class BankAccount
             decimal cashback = amount * 0.05m;
             _allTransactions.Add(new Transaction(cashback, date, "VIP cashback"));
             Audit.Log(Number, "Interest", cashback, date); 
-        }
+        } 
         if(overdraftTransaction is not null)
         {
             _allTransactions.Add(overdraftTransaction);
@@ -177,6 +176,14 @@ public class BankAccount
         //_allTransactions.Add(wirhdrawal);
 
     }
+
+    /// <summary>
+    /// Метод: проверяет, можно ли снять указанную сумму без нарушения
+    /// </summary>
+    /// <param name="amount">Проверяемая сумма снятия</param>
+    /// <returns>усли снятие допустимо,иначе</returns>
+    public bool CanWithdraw(decimal amount) => Balance - amount >= _minimumBalance;
+
     // protected - модификатор доступа, который означает,
     // что это метод можно вызвать только из текущего дочернего класса
     // клиент (внешний код) данный метод вызвать мне может)

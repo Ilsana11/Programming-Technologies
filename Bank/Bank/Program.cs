@@ -68,6 +68,7 @@
 
             vip.MakeWithdrawal(1000, DateTime.UtcNow, "buy");
 
+            Console.WriteLine("Задача 1");
             Console.WriteLine(regular.GetAccountHistory());
             Console.WriteLine(premium.GetAccountHistory());
             Console.WriteLine(vip.GetAccountHistory());
@@ -79,6 +80,42 @@
             Console.WriteLine(BankAccount.Audit.GetReport());
 
 
+            // Задача 3
+            Console.WriteLine();
+            Console.WriteLine("Здача 3");
+
+            var alice = new BankAccount("Алиса", 10000m);
+            var bob = new BankAccount("Боб", 500m);
+            var transferService = new Transfer();
+
+            transferService.Execute(alice, bob, 3000m, DateTime.UtcNow, "оплата долга");
+
+            Console.WriteLine($"После перевода: Алиса = {alice.Balance}, Боб = {bob.Balance}");
+            Console.WriteLine();
+            Console.WriteLine("История Алисы:");
+            Console.WriteLine(alice.GetAccountHistory());
+            Console.WriteLine("История Боба:");
+            Console.WriteLine(bob.GetAccountHistory());
+
+            // Неудачный перевод — недостаточно средств
+            try
+            {
+                transferService.Execute(bob, alice, 1_000_000m, DateTime.UtcNow, "слишком много");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"Ошибка перевода: {e.Message}");
+            }
+
+            // Перевод самому себе
+            try
+            {
+                transferService.Execute(alice, alice, 100m, DateTime.UtcNow, "себе");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"Ошибка перевода: {e.Message}");
+            }
 
         }
     }
