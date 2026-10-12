@@ -71,7 +71,7 @@
             Console.WriteLine(regular.GetAccountHistory());
             Console.WriteLine(premium.GetAccountHistory());
             Console.WriteLine(vip.GetAccountHistory());
-
+             
         }
     }
 }
