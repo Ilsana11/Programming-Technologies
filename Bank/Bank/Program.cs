@@ -54,6 +54,24 @@
 
             lineofCredit.MakeWithdrawal(600m, DateTime.UtcNow, "credit");
             Console.WriteLine(lineofCredit.GetAccountHistory());
+
+
+
+            // Задание 1
+            var regular = new BankAccount("Reg", 20000, 0, AccountStatus.Regular);
+            var premium = new BankAccount("Prem", 20000, 0, AccountStatus.Premium);
+            var vip = new BankAccount("Vip", 20000, 0, AccountStatus.VIP);
+
+            regular.PerformMonthAndTransactions();
+            premium.PerformMonthAndTransactions();
+            vip.PerformMonthAndTransactions();
+
+            vip.MakeWithdrawal(1000, DateTime.UtcNow, "buy");
+
+            Console.WriteLine(regular.GetAccountHistory());
+            Console.WriteLine(premium.GetAccountHistory());
+            Console.WriteLine(vip.GetAccountHistory());
+
         }
     }
 }

@@ -26,6 +26,7 @@ public class LineOfCreditAccount:BankAccount
     /// </summary>
     public override void PerformMonthAndTransactions()
     {
+        base.PerformMonthAndTransactions();
         if(Balance < 0)
         {
             decimal interest = -Balance * 0.07m;

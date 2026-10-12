@@ -3,6 +3,24 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bank;
 /// <summary>
+/// Перечисление: стутус клиента банка
+/// </summary>
+public enum AccountStatus
+{
+    /// <summary>
+    /// Обычный клиент: комиссия 50 руб/мес
+    /// </summary>
+    Regular,
+    /// <summary>
+    /// Премиум: 0 комиссии, 1% на остаток свыше 10 000
+    /// </summary>
+    Premium,
+    /// <summary>
+    /// VIP: 0 комиссии, 3% на остаток свыше 10 000, 5% кэшбэк на списания
+    /// </summary>
+    VIP
+}
+/// <summary>
 /// Класс: Представляет банковский счёт клиента
 /// Хранит историю транзакций и вычисляет баланс на её основе
 /// </summary>
@@ -42,6 +60,12 @@ public class BankAccount
             return balance;
         }
     }
+    /// <summary>
+    /// Свойство: статус клиента (Regular / Premium / VIP)
+    /// </summary>
+    public AccountStatus Status { get; set; }
+
+
 
     /// <summary>
     /// Поле: Счётчик для генерации уникальных номеров счетов
@@ -64,7 +88,8 @@ public class BankAccount
     /// <param name="name">Имя владельца счёта</param>
     /// <param name="initialBalance">начальный баланс</param>
     /// <param name="minimumBalance">Минимально допустимый остаток</param>
-    public BankAccount(string name, decimal initialBalance, decimal minimumBalance)
+    public BankAccount(string name, decimal initialBalance, decimal minimumBalance,
+        AccountStatus status = AccountStatus.Regular)
     {
         //Balance = initialBalance; //this.Balance = initialBalance;
         
@@ -73,12 +98,14 @@ public class BankAccount
         s_accountNumberSeed++;
 
         _minimumBalance = minimumBalance;
+        Status = status;
         if(initialBalance > 0)
         {
             MakeDeposite(initialBalance, DateTime.UtcNow, " initial balance");
         }
         
     }
+
 
     /// <summary>
     /// Метод: пополняет счёт на указанную сумму
@@ -121,6 +148,16 @@ public class BankAccount
 
         _allTransactions.Add(withdrawal);
 
+        if(overdraftTransaction is not null)
+        {
+            _allTransactions.Add(overdraftTransaction);
+        }
+
+        // Кэшбек VIP - 5% на все списания
+        if (Status == AccountStatus.VIP)
+        {
+            _allTransactions.Add(new Transaction(amount * 0.05m, date, "VIP cashback"));
+        }
         if(overdraftTransaction is not null)
         {
             _allTransactions.Add(overdraftTransaction);
@@ -196,7 +233,31 @@ public class BankAccount
     // другую реализацию этого метода PerformMonthAndTransactions
     public virtual void PerformMonthAndTransactions()
     {
+        ApplyStatusFees();
+    }
+    private void ApplyStatusFees()
+    {
+        switch (Status)
+        {
+            case AccountStatus.Regular:
+                MakeWithdrawal(50m, DateTime.UtcNow,"Monthly fee");
+                break;
 
+            case AccountStatus.Premium:
+                if (Balance > 10000m)
+                {
+                    MakeDeposite(Balance * 0.01m, DateTime.UtcNow, "Premium interest");
+                }
+                break;
+
+            case AccountStatus.VIP:
+                if (Balance > 10000m)
+                {
+                    MakeDeposite(Balance * 0.03m, DateTime.UtcNow, "VIP interest");
+                }
+                break;
+
+        }
     }
 
     /// <summary>

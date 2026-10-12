@@ -34,10 +34,12 @@ public class GiftCartAccount: BankAccount//наследование
     /// </summary>
     public override void PerformMonthAndTransactions()
     {
+        base.PerformMonthAndTransactions();
         if (_monthlyDeposit != 0)
         {
             MakeDeposite(_monthlyDeposit, DateTime.UtcNow, "Add monthly deposit");
         }
+
     }
     /// <summary>
     /// Метод (override): возвращает строковое представление счёта-копилки
