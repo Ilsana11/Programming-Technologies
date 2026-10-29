@@ -8,7 +8,7 @@ public class GiftCartAccount: BankAccount//наследование
 {
     /// <summary>
     /// Поле: фиксированная сумма ежемесячного пополнения.
-    /// Значение <c>0</c> означает, что автопополнение отключено
+    /// Значение <c>0</c> означает, что автопополнение отключено 
     /// </summary>
     private readonly decimal _monthlyDeposit = 0m;
 
