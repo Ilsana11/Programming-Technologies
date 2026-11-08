@@ -18,4 +18,4 @@ public sealed class GameSettings
     /// Максимальное количество попыток ввода
     /// </summary>
     public int MaxInputAttempts { get; init; } = 3;
-}
+} 
