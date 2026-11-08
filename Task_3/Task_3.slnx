@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Task3.Core/Task3.Core.csproj" Id="5962e05e-1b9c-4976-bd71-baa52bd6925d" />
+  </Folder>
+  <Project Path="Task_3/Task_3.csproj" />
+</Solution>
