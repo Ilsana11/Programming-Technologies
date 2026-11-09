@@ -11,12 +11,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        GameSettings settings = new GameSettings
-        {
-            MinNumber = 1,
-            MaxNumber = 100,
-            MaxInputAttempts = 3
-        };
+        GameSettings settings = DifficultyPresets.Get(Difficulty.Medium);
 
         INumberGenerator generator = new RandomNumberGenerator();
         IInput input = new ConsoleInput();
