@@ -1,5 +1,7 @@
 ﻿namespace Task3.Core.Stats;
-// Контракт для сбора статистики 
+/// <summary>
+/// Контракт для сбора статистики 
+/// </summary>
 public interface IGameStatistics
 {
     /// <summary>

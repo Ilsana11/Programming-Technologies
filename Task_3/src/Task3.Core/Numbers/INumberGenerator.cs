@@ -2,7 +2,7 @@
 /// <summary>
 /// Контракт для генератора чисел
 /// </summary>
-internal interface INumberGenerator
+public interface INumberGenerator
 {
     /// <summary>
     /// Загадывает число в диапозоне от min до max
