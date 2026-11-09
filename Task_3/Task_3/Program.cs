@@ -11,11 +11,13 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        GameSettings settings = DifficultyPresets.Get(Difficulty.Medium);
-
-        INumberGenerator generator = new RandomNumberGenerator();
         IInput input = new ConsoleInput();
         IOutput output = new ConsoleOutput();
+
+        ISettingsProvider settingsProvider = new ConsoleSettingsProvider(input, output);
+        GameSettings settings = settingsProvider.GetSettings();
+
+        INumberGenerator generator = new RandomNumberGenerator();
         INumberValidator validator = new RangeNumberValidator(settings);
         IGameStatistics stats = new GameStatistics();
 
