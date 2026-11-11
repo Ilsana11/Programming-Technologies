@@ -23,10 +23,10 @@ public sealed class StatisticsStorage : IStatisticsStorage
             string[] lines = File.ReadAllLines(_path);
             if (lines.Length >= 4)
             {
-                int total = int.Parse(lines[0]);
-                int games = int.Parse(lines[1]);
-                int min = int.Parse(lines[2]);
-                int max = int.Parse(lines[3]);
+                int total = int.Parse(lines[0].Split(":")[1]);
+                int games = int.Parse(lines[1].Split(":")[1]);
+                int min = int.Parse(lines[2].Split(":")[1]);
+                int max = int.Parse(lines[3].Split(":")[1]);
 
                 stats.Restore(total, games, min, max);
             }
@@ -43,10 +43,10 @@ public sealed class StatisticsStorage : IStatisticsStorage
     {
         string[] lines =
         {
-            statistics.TotalAttempts.ToString(),
-            statistics.GamesPlayed.ToString(),
-            statistics.Min.ToString(),
-            statistics.Max.ToString()
+            $"Всего попыток:{statistics.TotalAttempts}",
+            $"Сыграно игр:{statistics.GamesPlayed}",
+            $"Минимальное количество попыток:{statistics.Min}",
+            $"Максимальное количество попыток:{statistics.Max}"
         };
 
         File.WriteAllLines(_path, lines);
