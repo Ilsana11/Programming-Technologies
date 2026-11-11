@@ -10,7 +10,7 @@ namespace Task3.Console;
 internal class Program
 {
     static void Main(string[] args)
-    {
+    { 
         IInput input = new ConsoleInput();
         IOutput output = new ConsoleOutput();
 
