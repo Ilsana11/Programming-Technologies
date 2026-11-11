@@ -1,4 +1,5 @@
-﻿using Task3.Core.Input;
+﻿using Task3.Core.Events;
+using Task3.Core.Input;
 using Task3.Core.Numbers;
 using Task3.Core.Output;
 using Task3.Core.Settings;
@@ -18,7 +19,12 @@ public sealed class GuessGame : IGame
     private readonly IGameStatistics _stats;
     private readonly GameSettings _settings;
 
-    public GuessGame (INumberGenerator generator, IInput input, IOutput output, INumberValidator validator, 
+    public event EventHandler<MoveEventArgs>? MoveMade;
+    public event EventHandler<WinEventArgs>? Won;
+    public event EventHandler<FailEventArgs>? Failed;
+
+
+    public GuessGame(INumberGenerator generator, IInput input, IOutput output, INumberValidator validator,
         IGameStatistics stats, GameSettings settings)
     {
         _generator = generator;
@@ -27,6 +33,13 @@ public sealed class GuessGame : IGame
         _validator = validator;
         _stats = stats;
         _settings = settings;
+    }
+
+    public void Subscribe(IGameListener listener)
+    {
+        MoveMade += listener.OnMove;
+        Won += listener.OnWin;
+        Failed += listener.OnFail;
     }
 
     public void Run()
@@ -59,23 +72,21 @@ public sealed class GuessGame : IGame
             attempts++;
             GuessResult result = ReadGuess(number);
 
-            if(result == GuessResult.Fail)
+            if (result == GuessResult.Fail)
             {
-                _output.WriteLine($"Вы проиграли. Загаданное число было: {number}");
+                // Событие проигрыша
+                Failed?.Invoke(this, new FailEventArgs {Number = number});
                 return;
             }
-            else if(result == GuessResult.Greater)
+
+            // Событие хода
+            MoveMade?.Invoke(this, new MoveEventArgs { Result = result, Attempt = attempts });
+
+            if (result == GuessResult.Win)
             {
-                _output.WriteLine("Ваше число больше");
-            }
-            else if (result == GuessResult.Less)
-            {
-                _output.WriteLine("Ваше число меньше");
-            }
-            else if (result == GuessResult.Win)
-            {
-                _output.WriteLine("Вы угадали");
-                _stats.RegisterGame(attempts); // Запоминает побед
+                // Событие победы
+                _stats.RegisterGame(attempts);
+                Won?.Invoke(this, new WinEventArgs { Attempts = attempts});
                 return;
             }
         }
@@ -91,18 +102,18 @@ public sealed class GuessGame : IGame
             string? input = _input.ReadLine();
             int? guess = _validator.Validate(input);
 
-            if(guess == null)
+            if (guess == null)
             {
                 continue; // Если ввели мусор, тратим попытку ввода
             }
 
             int userNumber = guess.Value;
 
-            if(userNumber > number)
+            if (userNumber > number)
             {
                 return GuessResult.Greater;
             }
-            if(userNumber < number)
+            if (userNumber < number)
             {
                 return GuessResult.Less;
             }
