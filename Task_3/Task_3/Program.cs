@@ -19,10 +19,16 @@ internal class Program
 
         INumberGenerator generator = new RandomNumberGenerator();
         INumberValidator validator = new RangeNumberValidator(settings);
-        IGameStatistics stats = new GameStatistics();
+
+        string filePath = "stats.txt";
+        StatisticsStorage storage = new StatisticsStorage(filePath);
+
+        IGameStatistics stats = storage.Load();
 
         IGame game = new GuessGame(generator, input, output, validator, stats, settings);
 
         game.Run();
+
+        storage.Save(stats);
     }
 }

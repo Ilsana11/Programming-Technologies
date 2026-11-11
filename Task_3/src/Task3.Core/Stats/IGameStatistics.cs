@@ -29,4 +29,14 @@ public interface IGameStatistics
     /// Количество сыгранных игр
     /// </summary>
     int GamesPlayed { get; }
+
+    /// <summary>
+    /// для сохранения в файл
+    /// </summary>
+    int TotalAttempts { get; }
+
+    /// <summary>
+    /// для загрузки из файла
+    /// </summary>
+    void Restore(int totalAttempts, int gamesPlayed, int min, int max);
 }

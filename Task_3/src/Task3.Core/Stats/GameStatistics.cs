@@ -11,6 +11,8 @@ public sealed class GameStatistics : IGameStatistics
     public int Max { get; private set; }
     public int GamesPlayed => _gamePlayed;
 
+    public int TotalAttempts => _totalAttempts;
+
     public double Average
     {
         get
@@ -37,5 +39,13 @@ public sealed class GameStatistics : IGameStatistics
         {
             Max = attempts;
         }
+    }
+
+    public void Restore(int totalAttempts, int gamePlayed, int min, int max)
+    {
+        _totalAttempts = totalAttempts;
+        _gamePlayed = gamePlayed;
+        Min = min;
+        Max = max;
     }
 }
