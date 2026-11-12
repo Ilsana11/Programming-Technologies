@@ -25,6 +25,7 @@ public sealed class ConsoleSettingsProvider : ISettingsProvider
             _output.WriteLine("2 - Средний (1-100, 3 попытки)");
             _output.WriteLine("3 - Сложный (1-1000, 2 попытки)");
             _output.WriteLine("4 - Показать статистику из файла");
+            _output.WriteLine("5 - Выйти из игры");
             _output.Write("Ваш выбор:");
 
             string? choice = _input.ReadLine();
@@ -48,6 +49,11 @@ public sealed class ConsoleSettingsProvider : ISettingsProvider
                 continue;
             }
 
+            if (choice == "5")
+            {
+                _output.WriteLine("Выход из игры. Сау бол");
+                return null;
+            }
 
             Difficulty diff = choice switch
             {

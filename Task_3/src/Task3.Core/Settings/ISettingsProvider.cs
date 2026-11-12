@@ -5,7 +5,7 @@
 public interface ISettingsProvider
 {
     /// <summary>
-    /// Возвращает готовые настройки игры
+    /// Возвращает готовые настройки игры. Если null - значит игрок вышел из игры
     /// </summary>
-    GameSettings GetSettings();
+    GameSettings? GetSettings();
 }

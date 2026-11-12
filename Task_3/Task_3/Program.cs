@@ -7,7 +7,7 @@ using Task3.Core.Settings;
 using Task3.Core.Stats;
 using Task3.Core.Validation;
 
-namespace Task3.Console;
+namespace Task3;
 internal class Program
 {
     static void Main(string[] args)
@@ -18,7 +18,11 @@ internal class Program
 
         // Получаем настройки от пользователя, какую сложность он выбрал
         ISettingsProvider settingsProvider = new ConsoleSettingsProvider(input, output);
-        GameSettings settings = settingsProvider.GetSettings();
+        GameSettings? settings = settingsProvider.GetSettings();
+        if (settings == null)
+        {
+            return;
+        }
 
         // Создаем зависимости для игры
         INumberGenerator generator = new RandomNumberGenerator();
@@ -40,5 +44,9 @@ internal class Program
 
         // Сохраняем статистику 
         storage.Save(stats);
+
+        output.WriteLine("Игра завершена. Нажмите любую клавишу для выхода");
+        Console.ReadKey();
+
     }
 }
