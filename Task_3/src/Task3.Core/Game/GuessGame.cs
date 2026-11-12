@@ -70,56 +70,46 @@ public sealed class GuessGame : IGame
         while (true)
         {
             attempts++;
-            GuessResult result = ReadGuess(number);
 
-            if (result == GuessResult.Fail)
+            // Проверяем не кончились лли попытки игры
+            if (attempts > _settings.MaxInputAttempts)
             {
-                // Событие проигрыша
-                Failed?.Invoke(this, new FailEventArgs {Number = number});
-                return;
+                Failed?.Invoke(this, new FailEventArgs { Number = number });
+                return; // выходим из игры при проигрыше
             }
-
-            // Событие хода
-            MoveMade?.Invoke(this, new MoveEventArgs { Result = result, Attempt = attempts });
-
-            if (result == GuessResult.Win)
-            {
-                // Событие победы
-                _stats.RegisterGame(attempts);
-                Won?.Invoke(this, new WinEventArgs { Attempts = attempts});
-                return;
-            }
-        }
-
-    }
-
-    private GuessResult ReadGuess(int number)
-    {
-        for (int i = 0; i < _settings.MaxInputAttempts; i++)
-        {
-            _output.WriteLine($"Введите число от {_settings.MinNumber} до {_settings.MaxNumber}");
+            _output.WriteLine($"Попытка {attempts} из {_settings.MaxInputAttempts}. Введите число от {_settings.MinNumber}  до {_settings.MaxNumber}");
 
             string? input = _input.ReadLine();
             int? guess = _validator.Validate(input);
 
+
             if (guess == null)
             {
-                continue; // Если ввели мусор, тратим попытку ввода
+                _output.WriteLine("Не то ввел, попытка профукана.");
+                continue;
             }
-
             int userNumber = guess.Value;
 
+            if (userNumber == number)
+            {
+                _stats.RegisterGame(attempts);
+                Won?.Invoke(this, new WinEventArgs { Attempts = attempts });
+                return;
+            }
+
+            GuessResult result;
             if (userNumber > number)
             {
-                return GuessResult.Greater;
+                result = GuessResult.Greater;
             }
-            if (userNumber < number)
+            else
             {
-                return GuessResult.Less;
+                result = GuessResult.Less;
             }
-            return GuessResult.Win;
+
+            MoveMade?.Invoke(this, new MoveEventArgs { Result = result , Attempt = attempts});
         }
-        return GuessResult.Fail;
+
     }
 
     private void PrintStats()

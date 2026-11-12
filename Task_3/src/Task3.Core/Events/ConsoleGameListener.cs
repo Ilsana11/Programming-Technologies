@@ -13,15 +13,16 @@ public sealed class ConsoleGameListener : IGameListener
     }
 
     public void OnFail(object? sender, FailEventArgs e)
+
     {
-        _output.WriteLine($"Вы проиграли. Заданное число было: {e.Number} попыток");
+        _output.WriteLine($"Вы проиграли. Заданное число было: {e.Number}");
     }
 
     public void OnMove(object? sender, MoveEventArgs e)
     {
         if (e.Result == GuessResult.Greater)
         {
-            _output.WriteLine("Выше число больше");
+            _output.WriteLine("Ваше число больше");
         }
         else if (e.Result == GuessResult.Less)
         {

@@ -18,22 +18,46 @@ public sealed class ConsoleSettingsProvider : ISettingsProvider
 
     public GameSettings GetSettings()
     {
-        _output.WriteLine("Выберите уровень сложности");
-        _output.WriteLine("1 - Легкий (1-10, 5 попыток)");
-        _output.WriteLine("2 - Средний (1-100, 3 попытки)");
-        _output.WriteLine("3 - Сложный (1-1000, 2 попытки)");
-        _output.Write("Ваш выбор:");
-
-        string? choice = _input.ReadLine();
-
-        Difficulty diff = choice switch
+        while (true)
         {
-            "1" => Difficulty.Easy,
-            "3" => Difficulty.Hard,
-            _ => Difficulty.Medium,
-        };
+            _output.WriteLine("Выберите уровень сложности");
+            _output.WriteLine("1 - Легкий (1-10, 5 попыток)");
+            _output.WriteLine("2 - Средний (1-100, 3 попытки)");
+            _output.WriteLine("3 - Сложный (1-1000, 2 попытки)");
+            _output.WriteLine("4 - Показать статистику из файла");
+            _output.Write("Ваш выбор:");
 
-        _output.WriteLine($"Выбрана сложность: {diff}");
-        return DifficultyPresets.Get(diff);
+            string? choice = _input.ReadLine();
+
+            if (choice == "4")
+            {
+                string path = "stats.txt";
+                if (File.Exists(path))
+                {
+                    _output.WriteLine("Статистика из файла");
+                    string[] lines = File.ReadAllLines(path);
+                    foreach (string line in lines)
+                    {
+                        _output.WriteLine(line);
+                    }
+                }
+                else
+                {
+                    _output.WriteLine("Файл статистики пока пуст. Сыграйте первую игру.");
+                }
+                continue;
+            }
+
+
+            Difficulty diff = choice switch
+            {
+                "1" => Difficulty.Easy,
+                "3" => Difficulty.Hard,
+                _ => Difficulty.Medium,
+            };
+
+            _output.WriteLine($"Выбрана сложность: {diff}");
+            return DifficultyPresets.Get(diff);
+        }
     }
 }
