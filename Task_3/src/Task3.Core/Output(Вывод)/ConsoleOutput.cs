@@ -1,6 +1,6 @@
 ﻿namespace Task3.Core.Output;
 /// <summary>
-/// Выво текста в консоль
+/// Вывод текста в консоль
 /// </summary>
 public sealed class ConsoleOutput : IOutput
 {

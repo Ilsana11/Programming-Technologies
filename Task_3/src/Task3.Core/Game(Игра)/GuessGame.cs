@@ -44,20 +44,7 @@ public sealed class GuessGame : IGame
 
     public void Run()
     {
-        bool playAgain = true;
-
-        while (playAgain == true)
-        {
-            PlaySingleGame();
-            _output.Write("Хотите сыграть еще раз? y/n:");
-
-            string? input = _input.ReadLine();
-            if (input != "y")
-            {
-                playAgain = false;
-            }
-
-        }
+        PlaySingleGame();
         PrintStats();
     }
 

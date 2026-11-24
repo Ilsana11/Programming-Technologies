@@ -4,6 +4,7 @@ using Task3.Core.Input;
 using Task3.Core.Numbers;
 using Task3.Core.Output;
 using Task3.Core.Settings;
+using Task3.Core.Settings_Настройки_;
 using Task3.Core.Stats;
 using Task3.Core.Validation;
 
@@ -17,36 +18,40 @@ internal class Program
         IOutput output = new ConsoleOutput();
 
         // Получаем настройки от пользователя, какую сложность он выбрал
-        ISettingsProvider settingsProvider = new ConsoleSettingsProvider(input, output);
-        GameSettings? settings = settingsProvider.GetSettings();
-        if (settings == null)
+        var registry = new DifficultyRegistry(input, output);
+        ISettingsProvider settingsProvider = new ConsoleSettingsProvider(input, output, registry);
+
+        while (true)
         {
-            return;
+            GameSettings? settings = settingsProvider.GetSettings();
+            if (settings == null)
+            {
+                return;
+            }
+
+            // Создаем зависимости для игры
+            INumberGenerator generator = new RandomNumberGenerator();
+            INumberValidator validator = new RangeNumberValidator(settings);
+
+            // Настраиваем сохранение статистики
+            string filePath = "stats.txt";
+            StatisticsStorage storage = new StatisticsStorage(filePath);
+            IGameStatistics stats = storage.Load();
+
+            // Собираем игру
+            IGame game = new GuessGame(generator, input, output, validator, stats, settings);
+
+            // Подписываем слушателя на события
+            var listener = new ConsoleGameListener(output);
+            game.Subscribe(listener);
+            // Запуск игры
+            game.Run();
+
+            // Сохраняем статистику 
+            storage.Save(stats);
+
+            output.WriteLine("Игра завершена. Нажмите любую клавишу для выхода");
+            Console.ReadKey();
         }
-
-        // Создаем зависимости для игры
-        INumberGenerator generator = new RandomNumberGenerator();
-        INumberValidator validator = new RangeNumberValidator(settings);
-
-        // Настраиваем сохранение статистики
-        string filePath = "stats.txt";
-        StatisticsStorage storage = new StatisticsStorage(filePath);
-        IGameStatistics stats = storage.Load();
-
-        // Собираем игру
-        IGame game = new GuessGame(generator, input, output, validator, stats, settings);
-
-        // Подписываем слушателя на события
-        var listener = new ConsoleGameListener(output);
-        game.Subscribe(listener);
-        // Запуск игры
-        game.Run();
-
-        // Сохраняем статистику 
-        storage.Save(stats);
-
-        output.WriteLine("Игра завершена. Нажмите любую клавишу для выхода");
-        Console.ReadKey();
-
     }
 }
