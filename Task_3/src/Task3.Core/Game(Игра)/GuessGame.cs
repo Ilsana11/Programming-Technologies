@@ -10,7 +10,7 @@ namespace Task3.Core.Game;
 /// <summary>
 ///  Ядро игры. Управляет ходом
 /// </summary>
-public sealed class GuessGame : IGame
+public class GuessGame : IGame
 {
     private readonly INumberGenerator _generator;
     private readonly IInput _input;
@@ -48,12 +48,24 @@ public sealed class GuessGame : IGame
         PrintStats();
     }
 
+    protected virtual void OnMoveMade(MoveEventArgs e)
+    {
+        MoveMade?.Invoke(this, e);
+    }
+    protected virtual void OnWon(WinEventArgs e)
+    {
+        Won?.Invoke(this, e);
+    }
+    protected virtual void OnFailed(FailEventArgs e)
+    {
+        Failed?.Invoke(this, e);
+    }
+
     private void PlaySingleGame() // Сыграть одну игру
     {
         int number = _generator.Generate(_settings.MinNumber, _settings.MaxNumber);
 
         int attempts = 0;
-
         while (true)
         {
             attempts++;
@@ -61,7 +73,7 @@ public sealed class GuessGame : IGame
             // Проверяем не кончились лли попытки игры
             if (attempts > _settings.MaxInputAttempts)
             {
-                Failed?.Invoke(this, new FailEventArgs { Number = number });
+                OnFailed(new FailEventArgs { Number = number });
                 return; // выходим из игры при проигрыше
             }
             _output.WriteLine($"Попытка {attempts} из {_settings.MaxInputAttempts}. Введите число от {_settings.MinNumber}  до {_settings.MaxNumber}");
@@ -80,7 +92,7 @@ public sealed class GuessGame : IGame
             if (userNumber == number)
             {
                 _stats.RegisterGame(attempts);
-                Won?.Invoke(this, new WinEventArgs { Attempts = attempts });
+                OnWon(new WinEventArgs { Attempts = attempts });
                 return;
             }
 
@@ -94,7 +106,7 @@ public sealed class GuessGame : IGame
                 result = GuessResult.Less;
             }
 
-            MoveMade?.Invoke(this, new MoveEventArgs { Result = result , Attempt = attempts});
+            OnMoveMade(new MoveEventArgs { Result = result , Attempt = attempts});
         }
 
     }
