@@ -40,7 +40,7 @@ internal class Program
 
             while (true)
             {
-                GameSettings? settings = settingsProvider.GetSettings();
+                GameSettings? settings = settingsProvider.GetSettings(); 
                 if (settings == null)
                 {
                     return; 
