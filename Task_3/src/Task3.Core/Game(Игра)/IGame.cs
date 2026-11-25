@@ -3,6 +3,7 @@
 namespace Task3.Core.Game;
 /// <summary>
 /// Контракт для любой игры
+/// Принцип DIP
 /// </summary>
 public interface IGame
 {

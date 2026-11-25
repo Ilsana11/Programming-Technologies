@@ -4,6 +4,7 @@ using Task3.Core.Output;
 namespace Task3.Core.Players_Игроки_;
 /// <summary>
 /// Логика входа через консоль
+/// Принцип DIP
 /// </summary>
 public sealed class ConsolePlayerProvider : IPlayerProvider
 {

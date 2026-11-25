@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Input;
 /// <summary>
 /// Чтение ввода с консоли
+/// Принцип SRP
 /// </summary>
 public sealed class ConsoleInput : IInput
 {

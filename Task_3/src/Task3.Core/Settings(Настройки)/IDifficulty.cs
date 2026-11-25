@@ -4,6 +4,7 @@ namespace Task3.Core.Settings_Настройки_;
 /// <summary>
 /// Контракт для уровня сложности.
 /// Каждый уровень сам знает свои параметры и умеет создавать настройки
+/// Принцип OCP и DIP
 /// </summary>
 public interface IDifficulty
 {

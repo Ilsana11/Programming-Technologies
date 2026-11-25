@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Output;
 /// <summary>
 /// Контракт для вывода текста
+/// Принцип DIP
 /// </summary>
 public interface IOutput
 {

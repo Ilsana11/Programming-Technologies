@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Players_Игроки_;
 /// <summary>
 /// Реализация хранилища
+/// Принцип SRP
 /// </summary>
 public sealed class FileUserStorage : IUserStorage
 {

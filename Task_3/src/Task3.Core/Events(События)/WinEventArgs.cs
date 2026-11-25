@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Events;
 /// <summary>
 /// Данные события: игрок победил
+/// Принцип SRP
 /// </summary>
 public sealed class WinEventArgs
 {

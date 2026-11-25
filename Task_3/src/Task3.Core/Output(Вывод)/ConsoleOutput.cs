@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Output;
 /// <summary>
 /// Вывод текста в консоль
+/// Принцип SRP
 /// </summary>
 public sealed class ConsoleOutput : IOutput
 {

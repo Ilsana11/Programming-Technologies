@@ -6,6 +6,7 @@ using Task3.Core.Settings_Настройки_;
 namespace Task3.Core.Settings;
 /// <summary>
 /// Спрашивает у пользователя настройки в консоли
+/// Принцип SRP
 /// </summary>
 public sealed class ConsoleSettingsProvider : ISettingsProvider
 {

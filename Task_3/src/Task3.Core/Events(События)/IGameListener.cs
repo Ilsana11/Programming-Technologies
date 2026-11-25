@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Events;
 /// <summary>
 /// Контракт для слушателя игры
+/// Принцип ISP
 /// </summary>
 public interface IGameListener
 {

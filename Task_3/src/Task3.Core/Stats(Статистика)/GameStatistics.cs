@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Stats;
 /// <summary>
 /// Статистика памяти
+/// Принцип SRP
 /// </summary>
 public sealed class GameStatistics : IGameStatistics
 {

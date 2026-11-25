@@ -8,7 +8,7 @@ using Task3.Core.Validation;
 
 namespace Task3.Core.Game;
 /// <summary>
-///  Ядро игры. Управляет ходом
+///  Ядро игры. Управляет ходом. Принцип DIP
 /// </summary>
 public sealed class GuessGame : IGame
 {

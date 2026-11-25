@@ -3,6 +3,7 @@
 namespace Task3.Core.Events;
 /// <summary>
 /// Данные события: сделан ход
+/// Принцип SRP
 /// </summary>
 public sealed class MoveEventArgs
 {

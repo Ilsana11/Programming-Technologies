@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Numbers;
 /// <summary>
 /// Контракт для генератора чисел
+/// Принцип DIP
 /// </summary>
 public interface INumberGenerator
 {

@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Validation;
 /// <summary>
 /// Контракт для проверки чисел
+/// Принцип DIP
 /// </summary>
 public interface INumberValidator
 {

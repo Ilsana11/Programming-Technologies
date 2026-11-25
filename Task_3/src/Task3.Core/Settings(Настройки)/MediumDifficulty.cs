@@ -3,6 +3,7 @@
 namespace Task3.Core.Settings_Настройки_;
 /// <summary>
 /// Средний уровень: 1-100, 3 попытки
+/// Принцип SRP
 /// </summary>
 internal class MediumDifficulty : IDifficulty
 {

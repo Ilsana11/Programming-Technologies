@@ -3,6 +3,7 @@ using Task3.Core.Game;
 namespace Task3.Core.Events;
 /// <summary>
 /// Слушатель, который выводит события в консоль
+/// Принцип SRP
 /// </summary>
 public sealed class ConsoleGameListener : IGameListener
 {

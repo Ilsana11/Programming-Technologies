@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Settings;
 /// <summary>
 /// Настройки игры
+/// Принцип SRP
 /// </summary>
 public sealed class GameSettings
 {

@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Events;
 /// <summary>
 /// Данные события: игрок проиграл
+/// Принцип SRP
 /// </summary>
 public sealed class FailEventArgs
 {

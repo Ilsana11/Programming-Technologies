@@ -5,6 +5,7 @@ using Task3.Core.Settings;
 namespace Task3.Core.Settings_Настройки_;
 /// <summary>
 /// Пользовательская сложность: игрок сам вводит диапазон и количество попыток
+/// Принцип OCP
 /// </summary>
 public sealed class CustomDifficulty : IDifficulty
 {

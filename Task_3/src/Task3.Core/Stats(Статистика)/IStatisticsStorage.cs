@@ -1,8 +1,9 @@
 ﻿namespace Task3.Core.Stats;
 /// <summary>
 /// Контракт для сохранения и загрузки статистики
+/// Принцип DIP
 /// </summary>
-public  interface IStatisticsStorage
+public interface IStatisticsStorage
 {
     IGameStatistics Load();
     void Save(IGameStatistics statistics);

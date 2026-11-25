@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Numbers;
 /// <summary>
 /// Генерация случайного числа
+/// Принцип SRP
 /// </summary>
 public sealed class RandomNumberGenerator : INumberGenerator
 {

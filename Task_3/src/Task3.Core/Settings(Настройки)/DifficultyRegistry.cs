@@ -5,6 +5,7 @@ namespace Task3.Core.Settings_Настройки_;
 /// <summary>
 /// Реестр доступных уровней сложности.
 /// Хранит список IDifficulty и умеет выбирать по номеру.
+/// Принцип OCP
 /// </summary>
 public sealed class DifficultyRegistry
 {

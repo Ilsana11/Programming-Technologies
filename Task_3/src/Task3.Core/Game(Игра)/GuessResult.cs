@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Game;
 /// <summary>
 /// Перечисление исходов хода (больше, меньше, победа, провал)
+/// Принцип SRP
 /// </summary>
 public enum GuessResult
 {

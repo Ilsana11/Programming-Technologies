@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Stats;
 /// <summary>
 /// Сохраняет статистику в тектовый файл
+/// Принцип SRP
 /// </summary>
 public sealed class StatisticsStorage : IStatisticsStorage
 {

@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Stats;
 /// <summary>
 /// Контракт для сбора статистики 
+/// Принцип DIP
 /// </summary>
 public interface IGameStatistics
 {

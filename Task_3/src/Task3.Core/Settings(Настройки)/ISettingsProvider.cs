@@ -1,6 +1,7 @@
 ﻿namespace Task3.Core.Settings;
 /// <summary>
 /// Контракт для получения настроек от пользователя
+/// Принцип DIP
 /// </summary>
 public interface ISettingsProvider
 {

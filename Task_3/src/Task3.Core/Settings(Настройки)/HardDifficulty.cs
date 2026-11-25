@@ -3,6 +3,7 @@
 namespace Task3.Core.Settings_Настройки_;
 /// <summary>
 /// Сложный уровень: 1-1000, 2 попытки
+/// Принцип SRP
 /// </summary>
 internal class HardDifficulty : IDifficulty
 {

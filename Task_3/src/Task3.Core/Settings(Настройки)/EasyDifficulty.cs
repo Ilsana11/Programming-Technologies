@@ -3,6 +3,7 @@
 namespace Task3.Core.Settings_Настройки_;
 /// <summary>
 /// Лёгкий уровень: 1-10, 5 попыток
+/// Принцип SRP
 /// </summary>
 public sealed class EasyDifficulty : IDifficulty
 {

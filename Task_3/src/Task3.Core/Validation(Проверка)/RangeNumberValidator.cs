@@ -3,6 +3,7 @@
 namespace Task3.Core.Validation;
 /// <summary>
 /// Проверка числа на соответсвие диапазону
+/// Принцип SRP
 /// </summary>
 public class RangeNumberValidator : INumberValidator
 {
