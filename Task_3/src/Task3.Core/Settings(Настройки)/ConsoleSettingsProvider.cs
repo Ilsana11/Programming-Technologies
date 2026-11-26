@@ -13,12 +13,14 @@ public sealed class ConsoleSettingsProvider : ISettingsProvider
     private readonly IInput _input;
     private readonly IOutput _output;
     private readonly DifficultyRegistry _registry;
+    private readonly string _statsFilePath;
 
-    public ConsoleSettingsProvider(IInput input, IOutput output, DifficultyRegistry registry)
+    public ConsoleSettingsProvider(IInput input, IOutput output, DifficultyRegistry registry, string statsFilePath)
     {
         _input = input;
         _output = output;
         _registry = registry;
+        _statsFilePath = statsFilePath;
 
     }
 
@@ -106,11 +108,10 @@ public sealed class ConsoleSettingsProvider : ISettingsProvider
 
     private void ShowStats()
     {
-        const string path = "stats.txt";
-        if (File.Exists(path))
+        if (File.Exists(_statsFilePath))
         {
             _output.WriteLine("Статистика из файла");
-            foreach (string line in File.ReadAllLines(path))
+            foreach (string line in File.ReadAllLines(_statsFilePath))
             {
                 _output.WriteLine(line);
             }

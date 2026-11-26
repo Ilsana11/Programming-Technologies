@@ -20,7 +20,6 @@ internal class Program
 
         // Получаем настройки от пользователя, какую сложность он выбрал
         var registry = new DifficultyRegistry(input, output);
-        ISettingsProvider settingsProvider = new ConsoleSettingsProvider(input, output, registry);
 
         IUserStorage userStorage = new FileUserStorage();
         IPlayerProvider playerProvider = new ConsolePlayerProvider(input, output, userStorage);
@@ -35,6 +34,7 @@ internal class Program
             }
 
             string filePath = "stats_" + player.Name + ".txt";
+            ISettingsProvider settingsProvider = new ConsoleSettingsProvider(input, output, registry, filePath);
             IStatisticsStorage storage = new StatisticsStorage(filePath);
             IGameStatistics stats = storage.Load();
 
